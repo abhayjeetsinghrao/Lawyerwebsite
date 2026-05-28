@@ -578,33 +578,67 @@
     }
     @media(max-width:600px){ .footer-top{ flex-direction:column; gap:2.5rem; } .footer-brand-col{ flex:unset; } }
 
-    /* ══ DISCLAIMER BANNER ══════════════════════════════════ */
-    .disclaimer-banner {
-      background: #0a1a3a; border-top: 2px solid var(--blue);
-      padding: 1.4rem 6vw; color: rgba(255,255,255,.6);
-      font-size: .72rem; line-height: 1.75;
+    /* ══ DISCLAIMER MODAL ═══════════════════════════════════ */
+    .disclaimer-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(0,10,30,.72);
+      display: flex; align-items: center; justify-content: center;
+      padding: 1.5rem;
+      backdrop-filter: blur(3px);
+      animation: overlayIn .3s ease both;
     }
-    .disclaimer-banner-inner {
-      max-width: 1200px; margin: 0 auto;
-      display: flex; align-items: flex-start; gap: 1.5rem;
+    @keyframes overlayIn {
+      from { opacity:0; } to { opacity:1; }
     }
-    .disclaimer-label {
-      flex-shrink: 0; font-size: .55rem; font-weight: 700;
-      letter-spacing: .18em; text-transform: uppercase;
-      color: var(--blue); padding-top: .15rem;
+    .disclaimer-modal {
+      background: var(--white);
+      max-width: 680px; width: 100%;
+      border-top: 4px solid var(--navy);
+      padding: 2.8rem 3rem 2.4rem;
+      animation: modalUp .35s var(--ease) both;
+      max-height: 90vh; overflow-y: auto;
     }
-    .disclaimer-text { flex: 1; }
-    .disclaimer-text strong { color: rgba(255,255,255,.85); font-weight: 600; }
-    .disclaimer-close {
-      flex-shrink: 0; background: none; border: 1px solid rgba(255,255,255,.2);
-      color: rgba(255,255,255,.4); font-size: .7rem; padding: .2rem .6rem;
-      cursor: pointer; border-radius: 2px; align-self: flex-start;
-      transition: all .2s;
+    @keyframes modalUp {
+      from { opacity:0; transform:translateY(24px); }
+      to   { opacity:1; transform:translateY(0); }
     }
-    .disclaimer-close:hover { border-color: rgba(255,255,255,.5); color: rgba(255,255,255,.8); }
-    @media(max-width:600px){
-      .disclaimer-banner-inner { flex-direction: column; gap: .8rem; }
-      .disclaimer-close { align-self: flex-end; }
+    .disclaimer-modal-eyebrow {
+      font-size: .55rem; letter-spacing: .24em; text-transform: uppercase;
+      color: var(--blue); font-weight: 700; margin-bottom: .7rem;
+    }
+    .disclaimer-modal-title {
+      font-size: 1.15rem; font-weight: 700; color: var(--navy);
+      letter-spacing: -.01em; margin-bottom: 1.4rem; line-height: 1.3;
+    }
+    .disclaimer-modal-body {
+      font-size: .82rem; color: var(--mid); line-height: 1.85;
+      margin-bottom: 1.4rem; text-align: justify;
+    }
+    .disclaimer-modal-body p { margin-bottom: .9rem; }
+    .disclaimer-modal-body p:last-child { margin-bottom: 0; }
+    .disclaimer-modal-rule {
+      height: 1px; background: var(--rule); margin: 1.4rem 0;
+    }
+    .disclaimer-modal-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; flex-wrap: wrap;
+    }
+    .disclaimer-modal-note {
+      font-size: .68rem; color: var(--light); line-height: 1.6; flex: 1;
+    }
+    .disclaimer-agree-btn {
+      flex-shrink: 0;
+      background: var(--navy); color: var(--white); border: none;
+      font-family: var(--sans); font-size: .66rem; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase;
+      padding: .85rem 2.2rem; cursor: pointer;
+      transition: background var(--t);
+    }
+    .disclaimer-agree-btn:hover { background: var(--navy2); }
+    @media(max-width:560px){
+      .disclaimer-modal { padding: 2rem 1.6rem 1.8rem; }
+      .disclaimer-modal-footer { flex-direction: column; align-items: stretch; }
+      .disclaimer-agree-btn { text-align: center; }
     }
 
     /* ══ WHATSAPP FLOAT ══════════════════════════════════════ */
@@ -1421,20 +1455,21 @@
   </div>
 </section>
 
-<!-- ══ DISCLAIMER ══════════════════════════════════════ -->
-<div class="disclaimer-banner" id="disclaimerBanner">
-  <div class="disclaimer-banner-inner">
-    <span class="disclaimer-label">Disclaimer</span>
-    <p class="disclaimer-text">
-      <strong>Bar Council of India Compliance Notice.</strong>
-      This website has been created solely for informational purposes and does not constitute an advertisement, solicitation, or invitation to retain legal services.
-      Under the <strong>Bar Council of India Rules, 1964 (Rule 36)</strong>, advocates are prohibited from advertising or soliciting work, either directly or indirectly.
-      The information contained herein is not intended to be, and should not be construed as, legal advice on any matter.
-      Transmission of information through this website does not create an advocate–client relationship.
-      Readers are advised to seek independent legal counsel before acting on any information contained in these pages.
-      The testimonials, mandates, and matters referenced are included solely to provide factual background and are not intended to create any impression of past results or guaranteed outcomes.
-    </p>
-    <button class="disclaimer-close" onclick="dismissDisclaimer()" aria-label="Dismiss">✕ Dismiss</button>
+<!-- ══ DISCLAIMER MODAL ═══════════════════════════════════ -->
+<div class="disclaimer-overlay" id="disclaimerOverlay">
+  <div class="disclaimer-modal">
+    <div class="disclaimer-modal-eyebrow">Important Notice</div>
+    <div class="disclaimer-modal-title">Bar Council of India — Disclaimer</div>
+    <div class="disclaimer-modal-body">
+      <p>This website has been designed only for the purposes of dissemination of basic information on Abhayjeet Singh Rao and is not an attempt to advertise or solicit clients. It does not seek to create or invite any lawyer–client relationship. The information provided on this website is solely available at the user's request for informational purposes only, and should not be interpreted as soliciting or advertisement.</p>
+      <p>Abhayjeet Singh Rao is not responsible for any reliance that a reader places on the information contained herein. The content on this website should not be construed as a legal reference or legal advice. Readers are advised to seek legal counsel in their respective jurisdictions before acting on any information contained on this website.</p>
+      <p>Under the <strong>Bar Council of India Rules, 1964</strong>, advocates in India are not permitted to advertise or solicit work, whether directly or indirectly. By agreeing to proceed, you acknowledge that you are seeking information about Abhayjeet Singh Rao of your own accord and that there has been no advertisement, solicitation, inducement, or invitation of any kind whatsoever from Abhayjeet Singh Rao or any of his associates.</p>
+    </div>
+    <div class="disclaimer-modal-rule"></div>
+    <div class="disclaimer-modal-footer">
+      <p class="disclaimer-modal-note">By clicking "I Agree &amp; Proceed", you confirm that you have read and understood this notice and consent to proceed on that basis.</p>
+      <button class="disclaimer-agree-btn" onclick="agreeDisclaimer()">I Agree &amp; Proceed</button>
+    </div>
   </div>
 </div>
 
@@ -1593,14 +1628,17 @@
     document.getElementById('insightsShowMore').style.display = 'none';
   }
 
-  /* Disclaimer dismiss */
-  function dismissDisclaimer(){
-    document.getElementById('disclaimerBanner').style.display = 'none';
-    try { sessionStorage.setItem('disclaimerDismissed','1'); } catch(e){}
+  /* Disclaimer modal */
+  function agreeDisclaimer(){
+    const overlay = document.getElementById('disclaimerOverlay');
+    overlay.style.opacity = '0';
+    overlay.style.transition = 'opacity .3s ease';
+    setTimeout(() => { overlay.style.display = 'none'; }, 300);
+    try { sessionStorage.setItem('disclaimerAgreed','1'); } catch(e){}
   }
-  if(sessionStorage.getItem('disclaimerDismissed')){
-    var b = document.getElementById('disclaimerBanner');
-    if(b) b.style.display = 'none';
+  if(sessionStorage.getItem('disclaimerAgreed')){
+    var o = document.getElementById('disclaimerOverlay');
+    if(o) o.style.display = 'none';
   }
 
   /* Contact form — Formspree */
