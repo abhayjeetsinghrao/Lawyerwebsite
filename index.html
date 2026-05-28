@@ -573,6 +573,98 @@
     }
     .fom:hover{ gap:.7rem; }
     .fom::after { content:'→'; }
+
+    /* ══ PAGE LOAD FADE ══════════════════════════════════════ */
+    @keyframes pageFadeIn {
+      from { opacity:0; }
+      to   { opacity:1; }
+    }
+    body { animation: pageFadeIn .55s ease both; }
+
+    /* ══ HERO ENTRANCE ANIMATIONS ════════════════════════════ */
+    @keyframes heroUp {
+      from { opacity:0; transform:translateY(22px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .hero-label {
+      animation: heroUp .6s var(--ease) .1s both;
+    }
+    .hero-title {
+      animation: heroUp .65s var(--ease) .22s both;
+    }
+    .hero-desc {
+      animation: heroUp .65s var(--ease) .38s both;
+    }
+    .hero-btns {
+      animation: heroUp .65s var(--ease) .52s both;
+    }
+
+    /* ══ HERO NAME SHIMMER ════════════════════════════════════ */
+    @keyframes shimmer {
+      0%   { background-position: -400px 0; }
+      100% { background-position: 400px 0; }
+    }
+    .hero-title {
+      background: linear-gradient(
+        90deg,
+        var(--white) 0%,
+        var(--white) 35%,
+        rgba(255,255,255,.45) 48%,
+        var(--white) 60%,
+        var(--white) 100%
+      );
+      background-size: 800px 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: heroUp .65s var(--ease) .22s both, shimmer 1.6s ease .9s 1;
+    }
+    /* keep the muted span visible */
+    .hero-title span {
+      -webkit-text-fill-color: rgba(255,255,255,.5);
+    }
+
+    /* ══ NAV LINK UNDERLINE SLIDE ════════════════════════════ */
+    .nav-links a {
+      position: relative;
+      border-bottom: none !important;
+      overflow: hidden;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0;
+      width: 100%; height: 3px;
+      background: var(--navy);
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform .28s var(--ease);
+    }
+    .nav-links a:hover::after { transform: scaleX(1); }
+    /* keep CTA button unaffected */
+    .nav-links a.nav-cta::after { display: none; }
+
+    /* ══ SECTION HEADING LINE DRAW ═══════════════════════════ */
+    .section-rule {
+      width: 0; height: 3px;
+      background: var(--navy);
+      margin: 1rem 0 1.4rem;
+      transition: width .6s var(--ease);
+    }
+    .section-rule.blue  { background: var(--blue); }
+    .section-rule.white { background: rgba(255,255,255,.4); }
+    .section-rule.drawn { width: 36px; }
+
+    /* ══ INSIGHT CARD HOVER LIFT ═════════════════════════════ */
+    .insight-card:hover {
+      box-shadow: 0 12px 36px rgba(0,30,98,.14);
+      transform: translateY(-4px);
+    }
+    .insight-featured:hover {
+      box-shadow: 0 16px 48px rgba(0,30,98,.28);
+    }
+
+    /* ══ STAT COUNTER (panel + about) ════════════════════════ */
+    .hf-num, .stat-n { transition: none; }
   </style>
 </head>
 <body>
@@ -1265,6 +1357,51 @@
       document.querySelectorAll('.es-item').forEach(e => e.classList.remove('active'));
       this.classList.add('active');
     });
+  });
+
+  /* ── Section rule draw-in ── */
+  const ruleObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('drawn'); ruleObserver.unobserve(e.target); } });
+  }, {threshold:.3});
+  document.querySelectorAll('.section-rule').forEach(el => ruleObserver.observe(el));
+
+  /* ── Stat counters ── */
+  function animateCount(el, target, suffix, duration) {
+    const start = performance.now();
+    const isLLM = isNaN(parseInt(target));
+    if(isLLM){ el.textContent = target; return; }
+    const num = parseInt(target);
+    function step(now) {
+      const p = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.floor(ease * num) + suffix;
+      if(p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  const counterObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(!e.isIntersecting) return;
+      const el = e.target;
+      const raw = el.dataset.count;
+      const suffix = el.dataset.suffix || '';
+      animateCount(el, raw, suffix, 1200);
+      counterObserver.unobserve(el);
+    });
+  }, {threshold:.5});
+
+  document.querySelectorAll('.hf-num, .stat-n').forEach(el => {
+    const text = el.textContent.trim();
+    const match = text.match(/^(\d+)(\+?)(.*)$/);
+    if(match) {
+      el.dataset.count  = match[1];
+      el.dataset.suffix = match[2] + match[3];
+      el.textContent    = '0' + match[2] + match[3];
+    } else {
+      el.dataset.count = text;
+    }
+    counterObserver.observe(el);
   });
 
   /* Disclaimer dismiss */
