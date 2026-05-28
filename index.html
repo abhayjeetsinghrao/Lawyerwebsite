@@ -754,6 +754,8 @@
     <a href="mailto:abhayjeetrao@gmail.com">abhayjeetrao@gmail.com</a>
     <span style="color:rgba(255,255,255,.2);">|</span>
     <a href="tel:+919654400709">+91 96544 00709</a>
+    <span style="color:rgba(255,255,255,.2);">|</span>
+    <a href="https://www.linkedin.com/in/abhayjeetsinghrao/" target="_blank" rel="noopener">LinkedIn</a>
   </div>
 </div>
 
@@ -1372,6 +1374,7 @@
       <div class="footer-col-hd">Contact</div>
       <a href="mailto:abhayjeetrao@gmail.com">abhayjeetrao@gmail.com</a>
       <a href="tel:+919654400709">+91 96544 00709</a>
+      <a href="https://www.linkedin.com/in/abhayjeetsinghrao/" target="_blank" rel="noopener">LinkedIn</a>
       <a href="#">New Delhi, India</a>
     </div>
   </div>
@@ -1465,12 +1468,18 @@
   function filterMandates(cat, btn) {
     document.querySelectorAll('.mf-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    document.querySelectorAll('.m-col[data-category]').forEach(col => {
-      col.style.display = (cat === 'all' || col.dataset.category === cat) ? '' : 'none';
-    });
     document.querySelectorAll('.mandates-wrap').forEach(wrap => {
-      const visible = [...wrap.querySelectorAll('.m-col[data-category]')].some(c => c.style.display !== 'none');
-      wrap.style.display = visible ? '' : 'none';
+      const cols = [...wrap.querySelectorAll('.m-col[data-category]')];
+      cols.forEach(col => {
+        col.style.display = (cat === 'all' || col.dataset.category === cat) ? '' : 'none';
+      });
+      const visibleCols = cols.filter(c => c.style.display !== 'none');
+      if(visibleCols.length === 0){
+        wrap.style.display = 'none';
+      } else {
+        wrap.style.display = 'grid';
+        wrap.style.gridTemplateColumns = `repeat(${visibleCols.length}, 1fr)`;
+      }
     });
   }
 
